@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo da Velha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .board {
+      display: inline-block;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    .board td {
+      width: 60px;
+      height: 60px;
+      border: 1px solid #ccc;
+      font-size: 36px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo da Velha</h1>
+
+  <p>@alves_wrd</p>
+  
+  <table class="board">
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+  <div class="message"></div>
+
+  <script>
+    var currentPlayer = "X";
+    var gameOver = false;
+
+    var cells = document.getElementsByTagName("td");
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].addEventListener("click", cellClick);
+    }
+
+    function cellClick() {
+      if (gameOver || this.textContent !== "") {
+        return;
+      }
+
+      this.textContent = currentPlayer;
+      this.style.color = currentPlayer === "X" ? "blue" : "red";
+
+      if (checkWin()) {
+        document.querySelector(".message").textContent =
+          "Jogador " + currentPlayer + " venceu!";
+        gameOver = true;
+        return;
+      }
+
+      if (checkTie()) {
+        document.querySelector(".message").textContent = "Empate!";
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+    }
+
+    function checkWin() {
+      var winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (var i = 0; i < winningCombinations.length; i++) {
+        var [a, b, c] = winningCombinations[i];
+        if (
+          cells[a].textContent !== "" &&
+          cells[a].textContent === cells[b].textContent &&
+          cells[a].textContent === cells[c].textContent
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function checkTie() {
+      for (var i = 0; i < cells.length; i++) {
+        if (cells[i].textContent === "") {
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
